@@ -1,5 +1,11 @@
 # Requisitos para esta aplicação #
 
+# No banco de dados deve incluir id, nome, categoria, quantidade, preço e localização
+
+# Temática = Produtos Eletrônicos
+
+# Categorias = Memória, Monitor,  Teclado, Mouse, Placa de Vídeo, Placa Mãe, Processador, Headset
+
 Este projeto faz parte do Projeto Inovação da Faculdade, a seguir este é o meu portifólio em Python.
 Será o sistema de gerenciamento de Estoque.
 
@@ -31,3 +37,5 @@ atualizar o estoque.
 
 • Relatórios e Consultas: Funções para gerar relatórios e consultar o histórico de
 movimentações.
+
+
