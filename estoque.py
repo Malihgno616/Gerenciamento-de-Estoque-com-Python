@@ -1,4 +1,6 @@
 import sqlite3
+import pandas as pd
+import os
 
 #Conecta no banco de dados
 conn = sqlite3.connect('estoque.db')
@@ -21,7 +23,7 @@ conn.commit()
 
 
 #Classe dos Produtos que serão alterados, inseridos, adicionados ou removidos 
-class GerenciamentoProduto():
+class GerenciamentoProduto:
     def __init__(self,id,nome,categoria,quantidade,preco,localizacao):
         self.id = id
         self.nome = nome
@@ -37,35 +39,62 @@ class GerenciamentoProduto():
         """, produto)
         conn.commit()
 
+    def lista_produto(self):
+        conn = sqlite3.connect('estoque.db')
+        cursor = conn.cursor()
+        read = "SELECT * FROM estoque"
+        cursor.execute(read)
+        produtos = cursor.fetchall()
+        df = pd.DataFrame(produtos, columns=["id","nome",  "categoria", "quantidade", "preco", "localizacao"])
+        print(df.head())
+            
+        
+    def atualizar_produto(self,produto):
+        pass
 
 
 print("GERENCIAMENTO DE ESTOQUE")
+
+#Variáveis de inicialização para as funções das classes
+id = None
+nome = ""
+categoria = ""
+quantidade = 0
+preco = 0.0
+local = ""
+
 print("""\n
-1.Inserir Produtos
-2.Lista dos Produtos
-3.Atualizar Produto
-4.Deletar Produto
-5.Relatório do Produto
-6.Sair    
-""")
+    1.Inserir Produtos
+    2.Lista dos Produtos
+    3.Atualizar Produto
+    4.Deletar Produto
+    5.Relatório do Produto
+    6.Sair    
+    """)   
 
 while True:
+    
     opcao = int(input("Digite o número das opções acima: "))
+    
     if opcao == 1:
         print("""
               Cadastre o seu produto!!! 
               Insira o id, nome, categoria, quantidade, preco e a localização!!!
         """)
-        nome = str(input("Nome do produto: ")) 
-        categoria = str(input("Categoria do produto: "))     
+        nome = str(input("Nome do produto: ")).upper()
+        categoria = str(input("Categoria do produto: ")).upper()     
         quantidade = int(input("Digite a quantidade do produto: "))
         preco = float(input("Digite o preço do produto: "))
-        local = int(input("Localização do produto: "))
+        corredor = str(input("Localização do produto, Corredor: "))
+        rua = int(input("Localização do produto, Rua: "))
+        local = f"Corredor: {corredor.upper()} Rua: {rua} "
         produto = GerenciamentoProduto(id,nome,categoria,quantidade,preco,local)
         produto.add_produto((nome,categoria,quantidade,preco,local))        
         
-    elif opcao == 2:
-        print("Lista dos produtos")
+    elif opcao == 2:  
+        estoque = GerenciamentoProduto(id, nome, categoria, quantidade, preco, local)
+        estoque.lista_produto()
+        
     elif opcao == 3:
         print("Atualizar produto")    
     elif opcao == 4:
@@ -74,6 +103,7 @@ while True:
         print("Relatório do produto")
     elif opcao == 6:
         print("Saindo do programa...")
+        os.system('clear')
         break
     else:
         print("Opção invalida, tente novamente!")

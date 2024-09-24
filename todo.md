@@ -6,7 +6,7 @@
 
 # Categorias = Memória, Monitor,  Teclado, Mouse, Placa de Vídeo, Placa Mãe, Processador, Headset
 
-Este projeto faz parte do Projeto Inovação da Faculdade, a seguir este é o meu portifólio em Python.
+Este projeto faz parte do Projeto Inovação da Faculdade, a seguir este é o meu portfólio em Python.
 Será o sistema de gerenciamento de Estoque.
 
 • Cadastro de Produtos: O sistema deve permitir o cadastro de novos produtos, incluindo
