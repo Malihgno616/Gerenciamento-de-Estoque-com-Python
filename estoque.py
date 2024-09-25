@@ -45,14 +45,16 @@ class GerenciamentoProduto:
         read = "SELECT * FROM estoque"
         cursor.execute(read)
         produtos = cursor.fetchall()
-        df = pd.DataFrame(produtos, columns=["id","nome",  "categoria", "quantidade", "preco", "localizacao"])
+        df = pd.DataFrame(produtos, columns=["id","NOME",  "CATEGORIA", "QUANTIDADE", "PREÇO", "LOCALIZAÇÃO"])
         print(df.head())
             
+    # Função para atualizar um produto no banco de dados
+    def atualizar_produto(self,id,preco):
+        conn = sqlite3.connect('estoque.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE estoque SET preco = ?WHERE id = ?", (preco, id))
+        conn.commit()
         
-    def atualizar_produto(self,produto):
-        pass
-
-
 print("GERENCIAMENTO DE ESTOQUE")
 
 #Variáveis de inicialização para as funções das classes
@@ -96,7 +98,17 @@ while True:
         estoque.lista_produto()
         
     elif opcao == 3:
-        print("Atualizar produto")    
+        print("Atualizar o preço do produto")
+        estoque = GerenciamentoProduto(id, nome, categoria, quantidade, preco, local)
+        estoque.lista_produto()
+        
+        id = int(input("Digite o id do produto: "))
+        preco = float(input("Digite o novo preço do produto: "))
+        produto = GerenciamentoProduto(id, nome, categoria, quantidade, preco, local)
+        produto.atualizar_produto(id,preco)
+        
+        
+            
     elif opcao == 4:
         print("Escolha um produto para remover: ")
     elif opcao == 5:
