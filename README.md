@@ -9,10 +9,10 @@
 Este projeto faz parte do Projeto Inovação da Faculdade, a seguir este é o meu portfólio em Python.
 Será o sistema de gerenciamento de Estoque.
 
-• Cadastro de Produtos: O sistema deve permitir o cadastro de novos produtos, incluindo
+- [x] • Cadastro de Produtos: O sistema deve permitir o cadastro de novos produtos, incluindo
 informações como nome, categoria, quantidade em estoque, preço e localização no depósito.
 
-• Atualização de Estoque: O sistema deve permitir a atualização da quantidade de produtos
+- [x] • Atualização de Estoque: O sistema deve permitir a atualização da quantidade de produtos
 em estoque quando novos itens são recebidos ou quando produtos são vendidos.
 
 • Rastreamento de Localização: O sistema deve possibilitar o rastreamento da localização dos
@@ -27,10 +27,10 @@ com estoque baixo, excesso de estoque e movimentação de produtos.
 • Diagrama de Caso de Uso: Crie um Diagrama de Casos de Uso para o sistema de
 gerenciamento de estoque da empresa.
 
-• Definição de Estruturas de Dados: Estruturas bem definidas para produtos, categorias e
+- [x] • Definição de Estruturas de Dados: Estruturas bem definidas para produtos, categorias e
 movimentações.
 
-• Algoritmos de Cadastro e Consulta: Funções para cadastrar e consultar dados no sistema.
+- [x] • Algoritmos de Cadastro e Consulta: Funções para cadastrar e consultar dados no sistema.
 
 • Algoritmos de Movimentação: Funções para registrar entradas e saídas de produtos e
 atualizar o estoque.

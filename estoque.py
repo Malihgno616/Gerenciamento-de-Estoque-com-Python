@@ -15,17 +15,17 @@ CREATE TABLE IF NOT EXISTS estoque
     marca TEXT NOT NULL,
     quantidade INTEGER NOT NULL,
     preco REAL NOT NULL,
-    localizacao TEXT NOT NULL
+    localizacao TEXT NOT NULL,
+    data_cadastro DATE NOT NULL DEFAULT (date('now'))
 );
 """
 
 cursor.execute(tabela_estoque)
 conn.commit()
 
-
 #Classe dos Produtos que serão alterados, inseridos, adicionados ou removidos 
 class GerenciamentoProduto:
-    def __init__(self,id,nome,categoria,marca,quantidade,preco,localizacao):
+    def __init__(self,id,nome,categoria,marca,quantidade,preco,localizacao,data=None):
         self.id = id
         self.nome = nome
         self.categoria = categoria
@@ -33,11 +33,12 @@ class GerenciamentoProduto:
         self.quantidade = quantidade
         self.preco = preco
         self.localizacao = localizacao
+        self.data = data
     
     #função para inserir um produto  no banco de dados
     def add_produto(self, produto):
         cursor.execute("""
-        INSERT INTO estoque(nome, categoria, marca, quantidade, preco, localizacao)VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO estoque(nome, categoria, marca, quantidade, preco, localizacao, data_cadastro)VALUES (?, ?, ?, ?, ?, ?, date('now'));
         """, produto)
         conn.commit()
 
@@ -47,7 +48,7 @@ class GerenciamentoProduto:
         read = "SELECT * FROM estoque"
         cursor.execute(read)
         produtos = cursor.fetchall()
-        df = pd.DataFrame(produtos, columns=["id","NOME","CATEGORIA","MARCA","QUANTIDADE","PREÇO", "LOCALIZAÇÃO"])
+        df = pd.DataFrame(produtos, columns=["id","NOME","CATEGORIA","MARCA","QUANTIDADE","PREÇO", "LOCALIZAÇÃO", "DATA DE CADASTRO"])
         print(df.head())
             
     # Função para atualizar um produto no banco de dados
@@ -61,8 +62,8 @@ class GerenciamentoProduto:
         conn = sqlite3.connect('estoque.db')
         cursor = conn.cursor()
         cursor.execute("DELETE FROM estoque WHERE id = ?", (id,))
-        conn.commit()          
-        
+        conn.commit()       
+       
 print("GERENCIAMENTO DE ESTOQUE")
 
 #Variáveis de inicialização para as funções das classes
@@ -118,7 +119,7 @@ while True:
         estoque.lista_produto()
         id = int(input("Digite o id do produto: "))
         preco = float(input("Digite o novo preço do produto: "))
-        produto = GerenciamentoProduto(id, nome, categoria,marca, quantidade, preco, local)
+        produto = GerenciamentoProduto(id, nome, categoria,marca, quantidade, preco, local).date.today()
         produto.atualizar_produto(id,preco)
         print("Preço atualizado com sucesso!!!")
               
@@ -134,7 +135,9 @@ while True:
         print("Relatório do produto")
     elif opcao == 6:
         print("Saindo do programa...")
+        os.system('clear') or None
         break
+        
     else:
         print("Opção invalida, tente novamente!")
             
