@@ -2,7 +2,9 @@ import sqlite3
 import pandas as pd
 import os
 
+
 #Conecta no banco de dados
+
 conn = sqlite3.connect('estoque.db')
 cursor = conn.cursor()
 #Criar tabela no banco de dados
@@ -36,6 +38,7 @@ class GerenciamentoProduto:
         self.data = data
     
     #função para inserir um produto  no banco de dados
+    
     def add_produto(self, produto):
         cursor.execute("""
         INSERT INTO estoque(nome, categoria, marca, quantidade, preco, localizacao, data_cadastro)VALUES (?, ?, ?, ?, ?, ?, date('now'));
@@ -44,36 +47,59 @@ class GerenciamentoProduto:
 
     #Exibe a tabela do produto do banco de dados
     def lista_produto(self):
-        conn = sqlite3.connect('estoque.db')
-        cursor = conn.cursor()
-        read = "SELECT * FROM estoque"
-        cursor.execute(read)
+        cursor.execute("SELECT * FROM estoque")
         produtos = cursor.fetchall()
         df = pd.DataFrame(produtos, columns=["id","NOME","CATEGORIA","MARCA","QUANTIDADE","PREÇO", "LOCALIZAÇÃO", "DATA DE CADASTRO"])
         print(df)
             
     # Função para atualizar um produto no banco de dados
     def atualizar_produto(self,id,quantidade):
-        conn = sqlite3.connect('estoque.db')
-        cursor = conn.cursor()
         cursor.execute("UPDATE estoque SET quantidade = quantidade + ? WHERE id = ?", (quantidade, id))
         conn.commit()
     
     # Função para vender uma quantia específica de produtos baseados no id e quantidade
     def vender_produto(self, id, quantidade):
-        conn = sqlite3.connect('estoque.db')
-        cursor = conn.cursor()
         cursor.execute("UPDATE estoque SET quantidade = quantidade - ? WHERE Id = ?", (quantidade, id)) 
         conn.commit()
         
     # Função da classe que deleta um produto do banco de dados
     def deletar_produto(self, id):
-        conn = sqlite3.connect('estoque.db')
-        cursor = conn.cursor()
         cursor.execute("DELETE FROM estoque WHERE id = ?", (id,))
         conn.commit()       
     
+    def relatorio_produto(self):
+        estoque_baixo = 5
+        estoque_excesso = 50
+        
+        cursor.execute("SELECT * FROM estoque WHERE quantidade < ?",(estoque_baixo,))
+        baixo = cursor.fetchall()
+        
+        cursor.execute("SELECT * FROM estoque WHERE quantidade > ?",(estoque_excesso,))
+        excesso = cursor.fetchall()
+
+        print("=== Relatório de Estoque ===")
+        print("\nEstoque Baixo:")
+        if baixo:
+            for produto in baixo:
+                print(f"""ID:{produto[0]} Nome:{produto[1]}, Quantidade:{produto[4]} Localização:{produto[6]} """)
+        else:
+            print("Nenhum produto com estoque baixo encontrado.")      
+        
+        print("\nExcesso de Estoque:")                
+        if excesso:
+            for produto in excesso:
+                print(f"""ID:{produto[0]} Nome:{produto[1]} Quantidade: {produto[4]} Localização:{produto[6]} """)
+        else:
+            print("Nenhum produto com excesso de estoque encontrado.")
     
+    def local_produto(self, id, localizazao):
+        cursor.execute("SELECT * FROM estoque WHERE id = ? AND localizacao = ?", (id, localizazao,))
+        local = cursor.fetchall()
+        df = pd.DataFrame(local, ["ID","Localização"])
+        print(df)
+        
+        
+        
     
 print("GERENCIAMENTO DE ESTOQUE")
 
@@ -88,7 +114,7 @@ local = ""
 
 while True:
     
-    opcao = int(input("""\n
+    opcao = int(input("""
             1.Inserir Produtos
             2.Lista dos Produtos
             3.Atualizar Produto
@@ -97,7 +123,7 @@ while True:
             6.Localização
             7.Vender
             8.Sair   
-            \nDigite o número das opções acima: """))
+            Digite o número das opções acima: """))
     
     # Cadastrar o produto para adicionar para o banco de dados
     if opcao == 1:
@@ -167,6 +193,8 @@ while True:
         
     elif opcao == 5:
         print("Relatório do produto")
+        estoque = GerenciamentoProduto(id, nome, categoria,marca, quantidade, preco, local)
+        estoque.relatorio_produto()
         voltar = input("\nDeseja voltar para o menu principal?: (sim/não) ")
         if voltar == "sim":
             continue
@@ -175,6 +203,16 @@ while True:
     
     elif opcao == 6:
         print("Localização do produto")
+        id = input("Digite o id do produto que deseja saber a localização: ")
+        estoque = GerenciamentoProduto(id, nome, categoria,marca, quantidade, preco, local)
+        estoque.local_produto(id, local)
+        voltar = input("\nDeseja voltar para o menu principal?: (sim/não) ")
+        if voltar == "sim":
+            continue
+        else:
+            os.system('clear') or None
+            break       
+        
         
     elif opcao == 7:
         print("Vender um produto")
