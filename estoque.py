@@ -38,7 +38,6 @@ class GerenciamentoProduto:
         self.data = data
     
     #função para inserir um produto  no banco de dados
-    
     def add_produto(self, produto):
         cursor.execute("""
         INSERT INTO estoque(nome, categoria, marca, quantidade, preco, localizacao, data_cadastro)VALUES (?, ?, ?, ?, ?, ?, date('now'));
@@ -92,12 +91,16 @@ class GerenciamentoProduto:
         else:
             print("Nenhum produto com excesso de estoque encontrado.")
     
-    def local_produto(self, id, localizazao):
-        cursor.execute("SELECT * FROM estoque WHERE id = ? AND localizacao = ?", (id, localizazao,))
-        local = cursor.fetchall()
-        df = pd.DataFrame(local, ["ID","Localização"])
-        print(df)
-        
+    def local_produto(self, id):
+        cursor.execute("SELECT localizacao FROM estoque WHERE id = ?", (id,))
+        local = cursor.fetchone()  # Use fetchone para obter um único resultado
+        if local:
+            print(f"""
+                  Localização do produto ID: {id}: {local[0]}
+                  """)
+        else:
+            print("Produto não encontrado.")
+
         
         
     
@@ -122,7 +125,8 @@ while True:
             5.Relatório do Produto
             6.Localização
             7.Vender
-            8.Sair   
+            8.Sair
+               
             Digite o número das opções acima: """))
     
     # Cadastrar o produto para adicionar para o banco de dados
@@ -200,19 +204,19 @@ while True:
             continue
         else:
             break
-    
+        
     elif opcao == 6:
         print("Localização do produto")
-        id = input("Digite o id do produto que deseja saber a localização: ")
         estoque = GerenciamentoProduto(id, nome, categoria,marca, quantidade, preco, local)
-        estoque.local_produto(id, local)
+        estoque.lista_produto()
+        id = int(input("Digite o id do produto que deseja saber a localização: "))
+        estoque.local_produto(id)
         voltar = input("\nDeseja voltar para o menu principal?: (sim/não) ")
         if voltar == "sim":
             continue
         else:
             os.system('clear') or None
-            break       
-        
+            break
         
     elif opcao == 7:
         print("Vender um produto")
